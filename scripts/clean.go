@@ -30,6 +30,22 @@ func ensureDir(path string) {
 	}
 }
 
+func check(e error) {
+	if e != nil {
+		panic(e)
+	}
+}
+
+func dumpSetKeys(data map[string]bool, filename string) {
+	f, err := os.Create(filename)
+	check(err)
+	for k := range data {
+		f.WriteString(k + "\n")
+	}
+	err = f.Close()
+	check(err)
+}
+
 func dumpJson(data []Entry, filename string) {
 	f, err := os.Create(filename)
 	if err != nil {
@@ -80,4 +96,5 @@ func main() {
 	out_dir := "data/processed"
 	ensureDir(out_dir)
 	dumpJson(data, filepath.Join(out_dir, "cleaned.json"))
+	dumpSetKeys(existing_trains, filepath.Join(out_dir, "existing_train_numbers.csv"))
 }
